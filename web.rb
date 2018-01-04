@@ -11,6 +11,8 @@ use Rack::Session::EncryptedCookie,
   :secret => '597015e37a37f273809a0610b093e699' # Actually use something secret here!
 
 before do
+  content_type 'application/json'
+  
   begin
     @req_data = JSON.parse(request.body.read.to_s)
   rescue
