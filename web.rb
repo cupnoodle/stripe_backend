@@ -12,7 +12,7 @@ use Rack::Session::EncryptedCookie,
 
 before do
   content_type 'application/json'
-  
+
   begin
     @req_data = JSON.parse(request.body.read.to_s)
   rescue
@@ -49,17 +49,17 @@ post '/charge' do
     payload = indifferent_params(JSON.parse(request.body.read))
   end
 
-  source = payload[:source]
-  customer = payload[:customer_id] || @customer.id
+  source = payload["source"]
+  customer = payload["customer_id"] || @customer.id
   # Create the charge on Stripe's servers - this will charge the user's card
   begin
     charge = Stripe::Charge.create(
-      :amount => payload[:amount], # this number should be in cents
+      :amount => payload["amount"], # this number should be in cents
       :currency => "usd",
       :customer => customer,
       :source => source,
       :description => "Example Charge",
-      :shipping => payload[:shipping],
+      :shipping => payload["shipping"],
     )
   rescue Stripe::StripeError => e
     status 402
@@ -95,9 +95,9 @@ post '/create_charge' do
   # Create the charge on Stripe's servers
   begin
     charge = Stripe::Charge.create(
-      :amount => @req_data[:amount], # this number should be in cents
+      :amount => @req_data["amount"], # this number should be in cents
       :currency => "usd",
-      :source => @req_data[:source],
+      :source => @req_data["source"],
       :description => "Example Charge"
     )
   rescue Stripe::StripeError => e
